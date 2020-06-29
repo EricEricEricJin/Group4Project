@@ -34,7 +34,7 @@ class GUI:
         self.data_tv.column("deg", width = 80)
         self.data_tv.column("pwr", width = 100)
         self.data_tv.heading("deg", text = "Degree / deg")
-        self.data_tv.heading("pwr", text = "Power / W")
+        self.data_tv.heading("pwr", text = "Voltage / V")
 
         self.save_button = Button(self.root, text = "SAVE", command = self._write_file)
         self.freeze_button = Button(self.root, text = self.freezeText, command = self._freeze)
@@ -64,28 +64,27 @@ class GUI:
             
             try:
                 if self.freeze == False:
-                    list_data = []
+                    self.list_data = []
                     for deg in range(MIN_DEG, MAX_DEG + 1):
                         if deg in data:
-                            list_data.append([deg, data[deg]])
+                            self.list_data.append([deg, data[deg]])
 
                 # Update table
                 items = self.data_tv.get_children()
                 for item in items:
                     self.data_tv.delete(item)
                 
-                for i in range(len(list_data)):
-                    self.data_tv.insert("", i, values = (str(list_data[i][0]), str(list_data[i][1])))
+                for i in range(len(self.list_data)):
+                    self.data_tv.insert("", i, values = (str(self.list_data[i][0]), str(self.list_data[i][1])))
 
                 # Update graph
                 # self.canvas.delete(ALL)
                 for i in range(len(self.func_lines)):
                     self.canvas.delete(self.func_lines[i])
                 self.func_lines = []
-                # print("Data", list_data)
-                for i in range(len(list_data) - 1):
-                    self.func_lines.append(self.canvas.create_line(self._deg2x(list_data[i][0]), self._pwr2y(list_data[i][1]), self._deg2x(list_data[i + 1][0]), self._pwr2y(list_data[i + 1][1]), fill = "green", width = 2))
-                    # print("draw line:", self._deg2x(list_data[i][0]), self._pwr2y(list_data[i][1]), self._deg2x(list_data[i + 1][0]), self._pwr2y(list_data[i + 1][1]))
+                # print("Data", self.list_data)
+                for i in range(len(self.list_data) - 1):
+                    self.func_lines.append(self.canvas.create_line(self._deg2x(self.list_data[i][0]), self._pwr2y(self.list_data[i][1]), self._deg2x(self.list_data[i + 1][0]), self._pwr2y(self.list_data[i + 1][1]), fill = "green", width = 2))
                 # self.canvas.place(x = 0, y = 0)
             except:
                 pass
@@ -94,7 +93,7 @@ class GUI:
     def _write_file(self):
         f = filedialog.asksaveasfile()
         f_csv = csv.writer(f)
-        f_csv.writerows(data)
+        f_csv.writerows(self.list_data)
         f.close()
 
     def _freeze(self):
@@ -109,7 +108,7 @@ class GUI:
         return deg * 13
 
     def _pwr2y(self, pwr):
-        return 720 - (pwr * 288)
+        return 720 - (pwr * 144)
         
 
 

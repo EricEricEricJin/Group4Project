@@ -54,9 +54,10 @@ class serialLogging:
                 try:
                     try:
                         # print(raw[0])
-                        data_gv.data[raw[0]] = (raw[1] / 255 * 5) ** 2 / 10
+                        # data_gv.data[raw[0]] = (raw[1] / 255 * 5) ** 2 / 10
+                        data_gv.data[raw[0]] = (raw[1] / 255 * 5)
                     except:
-                        data_gv.data.update({raw[0]: (raw[1] / 255 * 5) ** 2 / 10})
+                        data_gv.data.update({raw[0]: (raw[1] / 255 * 5)})
                 except:
                     pass
                     # print("=======", raw)
